@@ -37,6 +37,21 @@
               required
             />
           </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              v-model="career"
+              type="text"
+              placeholder="Carrera"
+              class="w-full rounded-lg border border-gray-300 bg-gray-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/50 h-12 px-4 text-gray-800 transition-all"
+              required
+            />
+            <select v-model="gender" class="w-full rounded-lg border border-gray-300 bg-gray-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/50 h-12 px-4 text-gray-800 transition-all">
+              <option disabled value="">Selecciona tu género</option>
+              <option value="F">Femenino</option>
+              <option value="M">Masculino</option>
+              <option value="O">Otro</option>
+            </select>
+          </div>
 
           <input
             v-model="email"
@@ -154,6 +169,8 @@ const password = ref("");
 const confirmPassword = ref("");
 const phone_number = ref("");
 const selectedCampus = ref("");
+const career = ref("");
+const gender = ref("");
 const acceptedTerms = ref(false);
 
 const registerStudent = async () => {
@@ -168,6 +185,8 @@ const registerStudent = async () => {
     last_name: last_name.value,
     phone_number: phone_number.value,
     campuses: [selectedCampus.value],
+    career: career.value,
+    gender: gender.value,
   };
 
   const res = await auth.registerStudent(payload);

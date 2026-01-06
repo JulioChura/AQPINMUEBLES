@@ -17,20 +17,20 @@
                             <span class="material-symbols-outlined text-xl">person</span>
                             Editar Perfil
                         </router-link>
-                        <router-link class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                        <!-- <router-link class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                             to="/perfil/verificar-perfil"
                             exact-active-class="bg-primary/10 text-primary dark:!bg-primary/20 dark:!text-primary"
                             >
                             <span class="material-symbols-outlined text-xl">verified_user</span>
                             Verificar Perfil
-                        </router-link>
-                        <router-link class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors relative"
+                        </router-link> -->
+                        <!-- <router-link class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors relative"
                             to="/perfil/mensajes"
                             exact-active-class="bg-primary/10 text-primary dark:!bg-primary/20 dark:!text-primary">
                             <span class="material-symbols-outlined text-xl">chat_bubble</span>
                             Mensajes
                             <span class="absolute right-3 top-1/2 -translate-y-1/2 size-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">3</span>
-                        </router-link>
+                        </router-link> -->
                         <router-link class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                             to="/perfil/propiedades-guardadas"
                             exact-active-class="bg-primary/10 text-primary dark:!bg-primary/20 dark:!text-primary">

@@ -25,11 +25,7 @@
             <span class="material-symbols-outlined text-base">favorite</span>
             <span>My Favorites</span>
           </router-link>
-          <a class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-            href="#">
-            <span class="material-symbols-outlined text-base">description</span>
-            <span>My Bookings</span>
-          </a>
+         
         </nav>
 
         <div class="border-t border-slate-200 dark:border-slate-700 py-2">

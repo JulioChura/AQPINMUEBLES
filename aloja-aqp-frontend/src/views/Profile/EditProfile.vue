@@ -192,12 +192,19 @@ const hasChanges = () => {
 
 const updateUser = async () => {
     if (!hasChanges()) {
-        console.log('⚠️ No se detectaron cambios. No se enviará actualización.');
+        console.log(' No se detectaron cambios. No se enviará actualización.');
         router.push('/perfil/ver-perfil');
         return;
     }
 
-    const result = await auth.updateUserInfo(form)
+    // Construir el payload correctamente
+    const payload = {
+        ...form,
+        campuses: form.campus ? [form.campus] : [],
+    };
+    delete payload.campus;
+
+    const result = await auth.updateUserInfo(payload)
     if (result.success) {
         router.push('/perfil/ver-perfil');
     }

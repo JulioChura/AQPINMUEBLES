@@ -32,7 +32,7 @@
                 {{ isOwner ? "Publica aquí" : "Publica tu alojamiento" }}
               </span>
             </button>
-            <NotificacionButton />
+            <!-- <NotificacionButton /> -->
             <ProfileButton />
           </template>
           <template v-else>
@@ -62,7 +62,7 @@
         <div class="w-full flex flex-col items-center gap-6 mb-4">
           <template v-if="auth.user">
             <div class="flex gap-6 mb-2">
-              <NotificacionButton class="text-white hover:text-primary-light" />
+              <!-- <NotificacionButton class="text-white hover:text-primary-light" /> -->
               <ProfileButton class="text-white hover:text-primary-light" />
             </div>
           </template>
