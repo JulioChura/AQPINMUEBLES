@@ -93,8 +93,7 @@ export const useAuthStore = defineStore('auth', {
         // 🔹 Actualiza estado global
         this.isLogged = false
         this.user = null
-
-        alert('Sesión cerrada desde el auth')
+        // alert eliminado
       }
     },
     // --- REGISTRAR PROPIETARIO ---
@@ -120,12 +119,11 @@ export const useAuthStore = defineStore('auth', {
         console.log("💡 Respuesta del backend:", data);
 
         if (res.ok) {
-          alert("  Perfil de propietario creado exitosamente.");
           localStorage.setItem("user_info", JSON.stringify(data.user));
           return { success: true };
         } else {
           const msg = data.message || data.error || JSON.stringify(data);
-          alert(`  Error al registrar propietario: ${msg}`);
+          window.alert(`Error al registrar propietario: ${msg}`);
           return { success: false };
         }
       } catch (err) {
@@ -144,7 +142,7 @@ export const useAuthStore = defineStore('auth', {
         });
 
         const data = await res.json();
-        console.log("💡 Respuesta del backend:", data);
+        console.log("Respuesta del backend:", data);
 
         if (res.ok) {
           return { success: true, message: "Registro exitoso. Ahora puedes iniciar sesión." };
@@ -159,7 +157,7 @@ export const useAuthStore = defineStore('auth', {
     async updateUserInfo(payload) {
       const token = localStorage.getItem('access_token');
       if (!token) {
-        alert("⚠️ No estás autenticado. Inicia sesión nuevamente.");
+        alert("No estás autenticado. Inicia sesión nuevamente.");
         return { success: false };
       }
 
@@ -177,10 +175,9 @@ export const useAuthStore = defineStore('auth', {
         console.log("💡 Respuesta del backend (update):", data);
 
         if (res.ok) {
-          // 🔹 Actualiza datos locales
           this.user = data;
           localStorage.setItem("user_info", JSON.stringify(data));
-          alert("  Datos actualizados correctamente.");
+          // alert removido, solo se retorna success
           return { success: true, user: data };
         } else {
           const msg = data.detail || data.error || "Error al actualizar.";
@@ -193,7 +190,6 @@ export const useAuthStore = defineStore('auth', {
         return { success: false };
       }
     },
-    // 🔹 Carga usuario almacenado al iniciar la app
     loadUser() {
       const storedUser = localStorage.getItem('user_info')
       if (storedUser) {

@@ -2,10 +2,6 @@
     <HeaderComponent />
     <main class="flex-1 p-6 sm:p-8 md:p-10">
         <div class="max-w-4xl mx-auto">
-            <button @click="updateUser"
-                class="w-full flex-shrink-0 bg-primary text-white text-sm font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition-opacity mb-8">
-                Guardar Cambios
-            </button>
             <div
                 class="mb-10 bg-white/50 dark:bg-black/20 p-6 sm:p-8 rounded-xl border border-black/10 dark:border-white/10">
                 <h2 class="text-2xl font-bold mb-6 text-black dark:!text-white ">Perfil</h2>
@@ -50,14 +46,16 @@
                                     for="first-name">Nombre</label>
                                 <input v-model="form.first_name"
                                     class="w-full px-4 py-2 text-black dark:!text-white bg-transparent border border-black/20 dark:border-white/20 focus:border-primary focus:ring-primary rounded-lg transition-all"
-                                    id="first-name" type="text" />
+                                    id="first-name" type="text"
+                                    @focus="(e) => e.target.select()" />
                             </div>
                             <div class="flex flex-col">
                                 <label class="font-medium text-black/60 dark:!text-white/60 text-sm mb-1"
                                     for="last-name">Apellido</label>
                                 <input v-model="form.last_name"
                                     class="w-full px-4 py-2 text-black dark:!text-white bg-transparent border border-black/20 dark:border-white/20 focus:border-primary focus:ring-primary rounded-lg transition-all"
-                                    id="last-name" type="text" />
+                                    id="last-name" type="text"
+                                    @focus="(e) => e.target.select()" />
                             </div>
                         </div>
                         <div class="flex flex-col pt-4 md:pt-0">
@@ -70,7 +68,8 @@
                                 for="age">Age</label>
                             <input v-model="form.age"
                                 class="w-full px-4 py-2 text-black dark:!text-white bg-transparent border border-black/20 dark:border-white/20 focus:border-primary focus:ring-primary rounded-lg transition-all"
-                                id="age" type="text" />
+                                id="age" type="text"
+                                @focus="(e) => e.target.select()" />
                         </div>
                         <div class="flex flex-col pt-4 md:pt-0">
                             <label class="font-medium text-black/60 dark:!text-white/60 text-sm mb-1"
@@ -82,14 +81,16 @@
                                 for="carrera">Carrera</label>
                             <input v-model="form.career"
                                 class="w-full px-4 py-2 text-black dark:!text-white bg-transparent border border-black/20 dark:border-white/20 focus:border-primary focus:ring-primary rounded-lg transition-all"
-                                id="carrera" type="text" />
+                                id="carrera" type="text"
+                                @focus="(e) => e.target.select()" />
                         </div>
                         <div class="col-span-full flex flex-col pt-4">
                             <label class="font-medium text-black/60 dark:!text-white/60 text-sm mb-1"
                                 for="bio">Bio</label>
                             <textarea v-model="form.bio"
                                 class="w-full px-4 py-2 text-black dark:!text-white bg-transparent border border-black/20 dark:border-white/20 focus:border-primary focus:ring-primary rounded-lg transition-all"
-                                id="bio" rows="4"></textarea>
+                                id="bio" rows="4"
+                                @focus="(e) => e.target.select()"></textarea>
                         </div>
                     </div>
                 </div>
@@ -101,7 +102,9 @@
                             <p class="font-medium text-black/60 dark:!text-white/60">Phone</p>
                             <input v-model="form.phone_number"
                                 class="md:col-span-2 w-full px-4 py-2 text-black dark:!text-white bg-transparent border border-black/20 dark:border-white/20 focus:border-primary focus:ring-primary rounded-lg transition-all"
-                                type="text" />
+                                type="text"
+                                maxlength="9"
+                                @focus="(e) => e.target.select()" />
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-2 py-4 items-center">
                             <p class="font-medium text-black/60 dark:!text-white/60">Email</p>
@@ -121,21 +124,24 @@
 </template>
 
 <script setup lang="ts">
+
 import SelectDropDown from "../../components/Profile/SelectDropDown.vue";
 import { useAuthStore } from "../../stores/auth";
 import { useRouter } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
 import { webPageData } from '/src/stores/webPageData.js';
+import { useToast } from 'vue-toastification';
 
 
 const router = useRouter()
 const auth = useAuthStore();
 const storeWebPageData = webPageData();
+const toast = useToast();
 
 const genders = [
-    { id: 'F', name: 'Female' },
-    { id: 'M', name: '  Male' },
-    { id: 'O', name: 'Other' },
+    { id: 'F', name: 'Femenino' },
+    { id: 'M', name: 'Masculino' },
+    { id: 'O', name: 'Otro' },
 ]
 
 const campuses = ref([]);
@@ -163,7 +169,7 @@ onMounted(() => {
 const form = reactive({
     first_name: auth.user.first_name,
     last_name: auth.user.last_name,
-    gender: (genders.find(g => g.id === auth.user.student_profile.gender)?.id) || 'F',
+    gender: auth.user.student_profile.gender || 'F',
     age: auth.user.student_profile.age || '00',
     campus: null,
     career: auth.user.student_profile.career || 'Ing. Nuclear',
@@ -190,23 +196,38 @@ const hasChanges = () => {
     });
 };
 
+const validatePhoneNumber = (number) => {
+    // Perú: 9 dígitos, inicia con 9, solo números
+    const regex = /^9\d{8}$/;
+    return regex.test(number);
+}
+
 const updateUser = async () => {
     if (!hasChanges()) {
-        console.log(' No se detectaron cambios. No se enviará actualización.');
         router.push('/perfil/ver-perfil');
         return;
     }
 
-    // Construir el payload correctamente
+    // Validación de número peruano
+    if (!validatePhoneNumber(form.phone_number)) {
+        toast.error('El número debe tener 9 dígitos y empezar con 9 (ej: 9XXXXXXXX)');
+        return;
+    }
+
+    // Construir el payload correctamente y asegurar gender como string
     const payload = {
         ...form,
+        gender: typeof form.gender === 'object' && form.gender?.id ? form.gender.id : String(form.gender),
         campuses: form.campus ? [form.campus] : [],
     };
     delete payload.campus;
 
     const result = await auth.updateUserInfo(payload)
     if (result.success) {
-        router.push('/perfil/ver-perfil');
+        toast.success('Registro actualizado');
+        setTimeout(() => {
+            router.push('/perfil/ver-perfil');
+        }, 1200);
     }
 }
 

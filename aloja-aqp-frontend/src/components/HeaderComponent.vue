@@ -1,4 +1,5 @@
 <template>
+  <Loader :show="loggingOut" message="Cerrando sesión..." />
   <header class="bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
@@ -16,7 +17,7 @@
               AlojaAQP
             </router-link>
           </a>
-          <nav class="hidden md:flex items-center gap-6">
+          <nav class="hidden lg:flex items-center gap-6">
             <router-link to="/search" class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">Explorar alojamientos</router-link>
             <a href="#universidades" class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors" @click.prevent="scrollToUniversidades">Universidades</a>
             <router-link v-if="auth.user" to="/perfil/propiedades-guardadas" class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">Mis favoritos</router-link>
@@ -24,7 +25,7 @@
           </nav>
         </div>
 
-        <div class="hidden md:flex items-center gap-4">
+        <div class="hidden lg:flex items-center gap-4">
           <template v-if="auth.user">
             <button @click="handlePublishClick"
               class="bg-primary hover:bg-primary/90 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg">
@@ -33,17 +34,27 @@
               </span>
             </button>
             <!-- <NotificacionButton /> -->
-            <ProfileButton />
+            <ProfileButton @logout="handleLogout" />
           </template>
           <template v-else>
             <button @click="showLogin = true"
-              class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
+              class="px-4 py-2 rounded-lg text-white font-semibold shadow transition-colors flex items-center gap-2 bg-transparent focus:outline-none"
+              :style="showLoginBtnStyle"
+              @mouseover="hoverLoginBtn = true"
+              @mouseleave="hoverLoginBtn = false"
+              title="Iniciar sesión">
+              <span class="material-symbols-outlined text-xl">login</span>
               Iniciar sesión
+            </button>
+            <button @click="goToRegister"
+              class="px-4 py-2 rounded-lg border border-primary text-primary font-semibold bg-white shadow hover:bg-primary hover:text-white transition-colors flex items-center gap-2" title="Registrarse">
+              <span class="material-symbols-outlined text-xl">person_add</span>
+              Registrarse
             </button>
           </template>
         </div>
 
-        <div class="md:hidden flex items-center">
+        <div class="block lg:hidden flex items-center">
           <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-primary hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary" aria-controls="mobile-menu" aria-expanded="false">
             <span class="sr-only">Open main menu</span>
             <svg v-if="!mobileMenuOpen" class="block h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
@@ -53,17 +64,17 @@
       </div>
     </div>
 
-    <transition name="fade">
-      <div v-if="mobileMenuOpen" 
-           class="fixed inset-x-0 top-16 bottom-0 z-40 md:hidden 
-                  bg-indigo-900/95 dark:bg-slate-900/95 
-                  flex flex-col items-center justify-start 
-                  pt-8 px-6 overflow-y-auto min-h-screen">
+        <transition name="fade">
+          <div v-if="mobileMenuOpen" 
+               class="fixed inset-x-0 top-16 bottom-0 z-40 block lg:hidden 
+                      bg-indigo-900/95 dark:bg-slate-900/95 
+                      flex flex-col items-center justify-start 
+                      pt-8 px-2 sm:px-6 overflow-y-auto min-h-screen w-full max-w-screen-lg mx-auto">
         <div class="w-full flex flex-col items-center gap-6 mb-4">
           <template v-if="auth.user">
             <div class="flex gap-6 mb-2">
               <!-- <NotificacionButton class="text-white hover:text-primary-light" /> -->
-              <ProfileButton class="text-white hover:text-primary-light" />
+              <ProfileButton class="text-white hover:text-primary-light" @logout="handleLogout" />
             </div>
           </template>
         </div>
@@ -95,7 +106,18 @@
 
 <script setup>
 // ... (El bloque script se mantiene igual ya que la lógica es correcta)
-import { ref, onBeforeMount ,computed} from "vue";
+import { ref, onBeforeMount ,computed } from "vue";
+import Loader from "./Loader.vue";
+const loggingOut = ref(false);
+
+const handleLogout = async () => {
+  loggingOut.value = true;
+  await auth.logout();
+  setTimeout(() => {
+    loggingOut.value = false;
+    router.push("/");
+  }, 800);
+};
 import NotificacionButton from "./NotificacionButton.vue";
 import { useAuthStore } from "../stores/auth";
 import LoginModal from "../components/authorization/LoginModal.vue";
@@ -107,6 +129,18 @@ const auth = useAuthStore();
 const isDark = ref(false);
 const showLogin = ref(false);
 const mobileMenuOpen = ref(false);
+
+// Hover state for login button
+const hoverLoginBtn = ref(false);
+const showLoginBtnStyle = computed(() => {
+  return hoverLoginBtn.value
+    ? 'border: 2px solid #fff !important; background: rgba(255,255,255,0.08); color: #fff;'
+    : 'border: 2px solid #fff !important;';
+});
+
+const goToRegister = () => {
+  router.push('/register-student');
+};
 
 const scrollToUniversidades = () => {
   const el = document.getElementById('universidades');
