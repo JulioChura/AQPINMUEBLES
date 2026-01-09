@@ -23,7 +23,7 @@
       </div>
 
       <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-        hace {{ diasAntiguedad }} {{ diasAntiguedad === 1 ? 'día' : 'días' }}
+        {{ fecha }}
       </p>
 
       <p class="text-gray-600 dark:text-gray-300">
@@ -43,8 +43,8 @@ defineProps({
     type: String,
     required: true,
   },
-  diasAntiguedad: {
-    type: [Number, String],
+  fecha: {
+    type: String,
     required: true,
   },
   comentario: {

@@ -8,4 +8,5 @@ export default defineConfig({
     vue(),
     tailwindcss(),
   ],
+  // Proxy eliminado. Ahora las llamadas deben usar la URL completa del backend.
 })

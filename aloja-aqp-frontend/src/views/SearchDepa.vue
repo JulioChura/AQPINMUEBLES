@@ -109,20 +109,21 @@
 
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-
-                 
-
-                  <PropertyCard v-for="(property, index) in propertiesPublicas" :key="property.id"
-                    :id="property.id"
-                    :title="property.title"
-                    :description="property.description"
-                    :distance="getRouteAndDistanceForProperty(property).label || ''"
-                    :image="property.photos && property.photos.length ? property.photos[0].image : 'https://placehold.co/500x300?text=Sin+imagen' "
-                    :isSelected="selectedIndex === index"
-                    :price="property.monthly_price"
-                    :services="mapServices(property.services)"
-                    @card-clicked="handleCardClicked(index)" />
-
+                  <template v-if="isLoading">
+                    <SkeletonCard v-for="n in 6" :key="n" />
+                  </template>
+                  <template v-else>
+                    <PropertyCard v-for="(property, index) in propertiesPublicas" :key="property.id"
+                      :id="property.id"
+                      :title="property.title"
+                      :description="property.description"
+                      :distance="getRouteAndDistanceForProperty(property).label || ''"
+                      :image="property.photos && property.photos.length ? property.photos[0].image : 'https://placehold.co/500x300?text=Sin+imagen' "
+                      :isSelected="selectedIndex === index"
+                      :price="property.monthly_price"
+                      :services="mapServices(property.services)"
+                      @card-clicked="handleCardClicked(index)" />
+                  </template>
                 </div>
                 <div class="mt-8 flex justify-center">
                   <nav class="flex items-center gap-2">
@@ -152,8 +153,8 @@
                   :precio="Number(selectedProperty.monthly_price)"
                   :habitaciones="selectedProperty.rooms"
                   :servicios="selectedProperty.services"
-                  :latitudCasa="selectedProperty.latitude"
-                  :longitudCasa="selectedProperty.longitude" :latitudUni="selectedSede?.lat"
+                  :latitudCasa="Number(selectedProperty.latitude)"
+                  :longitudCasa="Number(selectedProperty.longitude)" :latitudUni="selectedSede?.lat"
                   :longitudUni="selectedSede?.lng" :UniImgUrl="selectedUniversity?.imageUrl || ''"
                   v-bind="(function(){ const r = getRouteAndDistanceForProperty(selectedProperty); return { routeGeoJson: r.route, distanceDisplay: r.label }; })()"
                 />
@@ -190,8 +191,8 @@
                       :precio="Number(selectedProperty.monthly_price)"
                       :habitaciones="selectedProperty.rooms"
                       :servicios="selectedProperty.services"
-                      :latitudCasa="selectedProperty.latitude"
-                      :longitudCasa="selectedProperty.longitude" :latitudUni="selectedSede?.lat"
+                      :latitudCasa="Number(selectedProperty.latitude)"
+                      :longitudCasa="Number(selectedProperty.longitude)" :latitudUni="selectedSede?.lat"
                       :longitudUni="selectedSede?.lng" :UniImgUrl="selectedUniversity?.imageUrl || ''"
                       v-bind="(function(){ const r = getRouteAndDistanceForProperty(selectedProperty); return { routeGeoJson: r.route, distanceDisplay: r.label }; })()" />
                   </template>
@@ -237,6 +238,8 @@ function mapServices(servicesArr) {
  import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 
 import PropertyCard from "../components/PropertyCard.vue";
+import SkeletonCard from "../components/SkeletonCard.vue";
+const isLoading = ref(false);
 import PropertyDetails from "../components/PropertyDetails.vue";
 import HeaderComponent from "../components/HeaderComponent.vue";
 import FooterComponent from "../components/FooterComponent.vue";
@@ -295,6 +298,12 @@ onMounted(async () => {
     searchInput.value.focus();
   }
   await fetchPropertyTypes();
+  isLoading.value = true;
+  try {
+    propertiesPublicas.value = await storePropiedades.getPropiedadesPublicas();
+  } finally {
+    isLoading.value = false;
+  }
 });
 const suggestions = ref([]);
 const showSuggestions = ref(false);
@@ -729,6 +738,7 @@ async function applyFilters() {
   console.log('applyFilters -> requestId', myRequestId);
 
   // clear current results immediately so UI doesn't show stale items while loading
+  isLoading.value = true;
   propertiesPublicas.value = [];
   selectedIndex.value = null;
 
@@ -754,6 +764,7 @@ async function applyFilters() {
   // Apply whatever the server returned (may be empty array)
   propertiesPublicas.value = results || [];
   currentPage.value = page;
+  isLoading.value = false;
   if (propertiesPublicas.value && propertiesPublicas.value.length > 0) {
     selectedIndex.value = 0;
   } else {
