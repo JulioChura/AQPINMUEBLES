@@ -5,16 +5,21 @@
             <p class="text-sm text-black/60 dark:text-white/60 mb-8">Organiza y administra visualmente tus propiedades favoritas.</p>
             <!-- Filtros eliminados para simplificar la vista -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="saved-properties-grid">
-                                <PropertyCard
-                                    v-for="(property, index) in propertiesList"
-                                    :key="property.id || index"
-                                    :id="property.id"
-                                    :title="property.title"
-                                    :description="property.description"
-                                    :image="property.photos?.[0]?.image || property.image || defaultImage"
-                                    :price="property.monthly_price"
-                                    :services="mapServices(property.services)"
-                                />
+                <template v-if="isLoading">
+                    <SkeletonCard v-for="n in 6" :key="n" />
+                </template>
+                <template v-else>
+                    <PropertyCard
+                        v-for="(property, index) in propertiesList"
+                        :key="property.id || index"
+                        :id="property.id"
+                        :title="property.title"
+                        :description="property.description"
+                        :image="property.photos?.[0]?.image || property.image || defaultImage"
+                        :price="property.monthly_price"
+                        :services="mapServices(property.services)"
+                    />
+                </template>
             </div>
         </div>
     </main>
@@ -36,7 +41,9 @@ function mapServices(servicesArr) {
         return { name: String(svc), icon: '', short: '' };
     });
 }
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref } from 'vue';
+import SkeletonCard from '/src/components/SkeletonCard.vue';
+const isLoading = ref(true);
 import { useGestionPropiedades } from '/src/stores/useGestionPropiedades.js';
 import PropertyCard from '/src/components/PropertyCard.vue';
 import { storeToRefs } from 'pinia';
@@ -48,7 +55,9 @@ const defaultImage = 'https://placehold.co/500x300?text=Sin+imagen';
 // Load favorites on mount. The template binds directly to the store ref
 // so changes to `favoriteProperties` will update the UI immediately.
 onMounted(async () => {
+    isLoading.value = true;
     await store.fetchFavoriteProperties();
+    isLoading.value = false;
 });
 
 const propertiesList = computed(() => favoriteProperties.value || []);

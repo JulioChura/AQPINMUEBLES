@@ -1,5 +1,8 @@
 <template>
-    <div class="px-4 sm:px-6 py-4">
+        <div v-if="showToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all animate-fade-in-out">
+            {{ toastMessage }}
+        </div>
+        <div class="px-4 sm:px-6 py-4">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
             <h2 class="text-gray-800 dark:text-white text-2xl sm:text-3xl font-bold leading-tight">
                 Mis Propiedades
@@ -24,25 +27,32 @@
             </div>
         </div>
 
-        <TransitionGroup 
-            name="fade" 
-            tag="div" 
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 sm:gap-6 justify-center"
-        >
-            <MyPropertyCard 
-                v-for="propiedad in propiedadesFiltradas" 
-                :key="propiedad.id" 
-                :id="propiedad.id" 
-                :titulo="propiedad.title"
-                :precio="propiedad.monthly_price" 
-                :estado="propiedad.status" 
-                :imagen="propiedad.photos[0]?.image ? propiedad.photos[0].image : 'https://placehold.co/500x300?text=Sin+imagen'" 
-                @editar="editarPropiedad" 
-                @ver="verPropiedad" 
-                @eliminar="confirmarEliminacion" 
-                @cambiar-estado="cambiarEstado" 
-            />
-        </TransitionGroup>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 sm:gap-6 justify-center">
+            <template v-if="isLoading">
+                <SkeletonCard v-for="n in 6" :key="n" />
+            </template>
+            <template v-else>
+                <TransitionGroup 
+                    name="card-fade"
+                    tag="div" 
+                    class="contents"
+                >
+                    <MyPropertyCard 
+                        v-for="propiedad in Array.isArray(propiedadesFiltradas) ? propiedadesFiltradas : []" 
+                        :key="propiedad.id" 
+                        :id="propiedad.id" 
+                        :titulo="propiedad.title"
+                        :precio="propiedad.monthly_price" 
+                        :estado="propiedad.status" 
+                        :imagen="(propiedad.photos && propiedad.photos.length > 0 && propiedad.photos[0].image) ? propiedad.photos[0].image : (propiedad.thumbnail || 'https://placehold.co/500x300?text=Sin+imagen')" 
+                        @editar="editarPropiedad" 
+                        @ver="verPropiedad" 
+                        @eliminar="confirmarEliminacion" 
+                        @cambiar-estado="cambiarEstado" 
+                    />
+                </TransitionGroup>
+            </template>
+        </div>
 
         <div v-if="showConfirm" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
             <div class="bg-white dark:!bg-gray-800 rounded-xl p-6 shadow-2xl w-full max-w-sm text-center">
@@ -72,6 +82,8 @@
 <script setup>
 import Loader from '../../../components/Loader.vue';
 import { ref, onMounted, computed } from "vue";
+import SkeletonCard from '/src/components/SkeletonCard.vue';
+const isLoading = ref(true);
 import { useGestionPropiedades } from "/src/stores/useGestionPropiedades.js";
 import MyPropertyCard from "/src/components/MisPropiedades/MyPropertyCard.vue"
 import { useRouter } from 'vue-router';
@@ -91,19 +103,23 @@ const selectedPropertyId = ref(null);
 const filtroEstado = ref("all");
 
 const propiedadesFiltradas = computed(() => {
-    if (filtroEstado.value === "all") return propiedades.value;
-
-    return propiedades.value.filter(
-        (p) => p.status === filtroEstado.value
-    );
+    // Always return an array, never undefined/null
+    const arr = Array.isArray(propiedades.value) ? propiedades.value : [];
+    if (filtroEstado.value === "all") return arr;
+    return arr.filter((p) => p.status === filtroEstado.value);
 });
 
 const fetchMyProperties = async () => {
+    isLoading.value = true;
     try {
-        propiedades.value = await storePropiedades.getMisPropiedades();
+        const result = await storePropiedades.getMisPropiedades();
+        // Defensive: always assign an array
+        propiedades.value = Array.isArray(result) ? result : [];
     } catch (err) {
+        propiedades.value = [];
         console.error("Error al obtener propiedades:", err);
     }
+    isLoading.value = false;
 };
 
 const editarPropiedad = (id) => {
@@ -160,13 +176,19 @@ const cerrarModal = () => {
     fetchMyProperties();
 }
 
+const showToast = ref(false);
+const toastMessage = ref("");
+
 const eliminarPropiedad = async (id) => {
     showConfirm.value = false;
     try {
         propiedades.value = await storePropiedades.eliminarPropiedad(id);
-
+        toastMessage.value = "Propiedad eliminada correctamente";
+        showToast.value = true;
+        setTimeout(() => {
+            showToast.value = false;
+        }, 2200);
         if (propiedades.value.length <= 0) emit("sinPropiedades");
-
     } catch (err) {
         console.error("Error al eliminar propiedad", id, " :", err);
     }
@@ -188,5 +210,29 @@ onMounted(() => {
 .fade-leave-to {
     opacity: 0;
     transform: scale(0.95);
+}
+.animate-fade-in-out {
+    animation: fadeInOut 2.2s;
+}
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+}
+.card-fade-enter-active {
+    animation: cardIn 0.5s cubic-bezier(.4,2,.6,1) both;
+}
+.card-fade-leave-active {
+    animation: cardOut 0.3s cubic-bezier(.4,2,.6,1) both;
+}
+@keyframes cardIn {
+    0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+    80% { opacity: 1; transform: translateY(-4px) scale(1.03); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes cardOut {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: translateY(30px) scale(0.96); }
 }
 </style>

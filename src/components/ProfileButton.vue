@@ -25,7 +25,6 @@
             <span class="material-symbols-outlined text-base">favorite</span>
             <span>My Favorites</span>
           </router-link>
-         
         </nav>
 
         <div class="border-t border-slate-200 dark:border-slate-700 py-2">
@@ -41,6 +40,7 @@
 </template>
 
 <script setup>
+import Loader from './Loader.vue';
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
@@ -70,10 +70,15 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
-const onLogoutClick = () => {
-  auth.logout();
-  router.push("/");
+const onLogoutClick = async () => {
+  // Emit event to parent to show global logout spinner
+  // Parent (HeaderComponent) will handle the spinner and redirect
+  // This keeps the spinner overlay global
+  // Use $emit for Options API, or defineEmits for script setup
+  emit('logout');
 };
+
+const emit = defineEmits(['logout']);
 
 </script>
 

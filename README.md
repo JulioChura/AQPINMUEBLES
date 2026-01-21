@@ -1,6 +1,29 @@
 # 🏡 Datos Iniciales para la Base de Datos
 
-Este documento describe los datos que deben agregarse manualmente a las tablas del sistema.
+## 📸 Screenshots de la Aplicación
+
+<div align="center">
+
+<!-- Galería principal: 3 imágenes grandes -->
+<a href="docs/picture1.png" target="_blank"><img src="docs/picture1.png" alt="Pantalla 1" width="30%" style="margin: 0 5px;"/></a>
+<a href="docs/picture2.png" target="_blank"><img src="docs/picture2.png" alt="Pantalla 2" width="30%" style="margin: 0 5px;"/></a>
+<a href="docs/picture3.png" target="_blank"><img src="docs/picture3.png" alt="Pantalla 3" width="30%" style="margin: 0 5px;"/></a>
+
+<!-- Galería secundaria: miniaturas clickeables -->
+<details>
+	<summary>Ver más screenshots</summary>
+	<div>
+		<a href="docs/picture4.png" target="_blank"><img src="docs/picture4.png" alt="Pantalla 4" width="18%" style="margin: 0 5px;"/></a>
+		<a href="docs/picture5.png" target="_blank"><img src="docs/picture5.png" alt="Pantalla 5" width="18%" style="margin: 0 5px;"/></a>
+		<a href="docs/picture6.png" target="_blank"><img src="docs/picture6.png" alt="Pantalla 6" width="18%" style="margin: 0 5px;"/></a>
+		<a href="docs/picture7.png" target="_blank"><img src="docs/picture7.png" alt="Pantalla 7" width="18%" style="margin: 0 5px;"/></a>
+		<a href="docs/picture8.png" target="_blank"><img src="docs/picture8.png" alt="Pantalla 8" width="18%" style="margin: 0 5px;"/></a>
+		<a href="docs/picture9.png" target="_blank"><img src="docs/picture9.png" alt="Pantalla 9" width="18%" style="margin: 0 5px;"/></a>
+		<a href="docs/picture10.png" target="_blank"><img src="docs/picture10.png" alt="Pantalla 10" width="18%" style="margin: 0 5px;"/></a>
+	</div>
+</details>
+
+</div>
 
 ---
 

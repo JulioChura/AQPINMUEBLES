@@ -22,12 +22,20 @@
                                 <template v-else>
                                     <div class="grid grid-cols-1 md:grid-cols-4 gap-2 rounded-xl overflow-hidden md:h-[500px] items-stretch">
                                         <div class="col-span-1 md:col-span-3 h-auto md:h-full aspect-[4/3] md:aspect-auto cursor-pointer" @click="openImageModal(0)">
-                                            <img :src="mainPhoto?.image" alt="Imagen principal" class="w-full h-full object-cover" />
+                                            <img :src="mainPhoto?.image" alt="Imagen principal"
+                                                class="w-full h-full object-cover transition-opacity duration-700"
+                                                :class="{ 'opacity-0': !mainImgLoaded, 'opacity-100': mainImgLoaded }"
+                                                @load="mainImgLoaded = true"
+                                            />
                                         </div>
                                         <div class="hidden md:grid col-span-1 grid-rows-4 gap-2 h-full">
                                             <template v-for="(photo, index) in sidePhotos.slice(0, 4)" :key="index">
                                                 <div class="relative h-full cursor-pointer" @click="openImageModal(index+1)">
-                                                    <img :src="photo.image || defaultImage" alt="Foto adicional" class="w-full h-full object-cover" />
+                                                    <img :src="photo.image || defaultImage" alt="Foto adicional"
+                                                      class="w-full h-full object-cover transition-opacity duration-700"
+                                                      :class="{ 'opacity-0': !sideImgLoaded[index], 'opacity-100': sideImgLoaded[index] }"
+                                                      @load="sideImgLoaded[index] = true"
+                                                    />
                                                 </div>
                                             </template>
                                             <div v-if="sidePhotos.length === 0" class="h-full flex items-center justify-center text-gray-400">Sin imágenes adicionales</div>
@@ -36,15 +44,23 @@
                                     <div v-if="propiedad.photos.length > 1" class="grid grid-cols-4 gap-2 md:hidden mt-2">
                                         <div v-for="(photo, index) in propiedad.photos.slice(1, 5)" :key="index"
                                             class="aspect-square cursor-pointer" @click="openImageModal(index+1)">
-                                            <img :src="photo.image || defaultImage" alt="Foto adicional" class="w-full h-full object-cover rounded-md" />
+                                            <img :src="photo.image || defaultImage" alt="Foto adicional"
+                                                class="w-full h-full object-cover rounded-md transition-opacity duration-700"
+                                                :class="{ 'opacity-0': !sideImgLoaded[index], 'opacity-100': sideImgLoaded[index] }"
+                                                @load="sideImgLoaded[index] = true"
+                                            />
                                         </div>
                                     </div>
-                                    <div v-if="showImageModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80">
+                                    <div v-if="showImageModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80" @click.self="closeImageModal">
                                         <div class="relative flex items-center">
                                             <button @click="prevImage" class="absolute left-[-3rem] top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-700 font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-md z-10">
                                                 <span class="material-symbols-outlined">chevron_left</span>
                                             </button>
-                                            <img :src="currentImage" class="max-h-[80vh] max-w-[90vw] rounded-xl shadow-2xl border-4 border-white z-20" />
+                                            <img :src="currentImage"
+                                              class="max-h-[80vh] max-w-[90vw] rounded-xl shadow-2xl border-4 border-white z-20 transition-opacity duration-700"
+                                              :class="{ 'opacity-0': !modalImgLoaded, 'opacity-100': modalImgLoaded }"
+                                              @load="modalImgLoaded = true"
+                                            />
                                             <button @click="nextImage" class="absolute right-[-3rem] top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-700 font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-md z-10">
                                                 <span class="material-symbols-outlined">chevron_right</span>
                                             </button>
@@ -138,7 +154,7 @@
                                         <div
                                             class="mt-4 aspect-video bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden">
                                         <MapView v-if="propiedad.latitude && propiedad.longitude"
-                                            :latitudCasa="propiedad.latitude" :longitudCasa="propiedad.longitude"
+                                            :latitudCasa="Number(propiedad.latitude)" :longitudCasa="Number(propiedad.longitude)"
                                             :latitudUni="selectedSede?.lat" :longitudUni="selectedSede?.lng"
                                             :UniImgUrl="selectedUniversity?.imageUrl || ''" :routeGeoJson="routeInfo.route" />
                                     </div>
@@ -152,7 +168,7 @@
                                         <Comentario v-for="review in actualReviews" :key="review.id"
                                             :imagen="review.user.avatar || '/src/public/default_avatar.png'"
                                             :autor="`${toStartCase(review.user.first_name)} ${toStartCase(review.user.last_name)}`"
-                                            :diasAntiguedad="calcularDiasAntiguedad(review.review_date)"
+                                            :fecha="new Date(review.review_date).toLocaleString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })"
                                             :comentario="review.comment" :isAutor="esAutor(review.user.id)" />
 
 
@@ -288,7 +304,7 @@ function prevImage() {
 }
 import LoginModal from "../components/authorization/LoginModal.vue";
 import ServiceIcon from '/src/components/icons/ServiceIcon.vue'
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import DOMPurify from 'dompurify';
 import { useRoute, useRouter } from "vue-router";
 import MapView from "../components/MapView.vue";
@@ -606,4 +622,23 @@ const toggleFavorite = async () => {
         console.error('toggleFavorite error', err);
     }
 };
+
+// Fade-in para imágenes
+
+const mainImgLoaded = ref(false);
+const sideImgLoaded = ref([false, false, false, false]);
+const modalImgLoaded = ref(false);
+
+watch(() => mainPhoto.value?.image, () => { mainImgLoaded.value = false; });
+watch(() => sidePhotos.value, () => { sideImgLoaded.value = [false, false, false, false]; });
+watch(() => currentImage.value, () => { modalImgLoaded.value = false; });
 </script>
+
+<style scoped>
+.opacity-0 {
+  opacity: 0;
+}
+.opacity-100 {
+  opacity: 1;
+}
+</style>

@@ -9,6 +9,7 @@
 
       <!-- Formulario normal -->
       <form @submit.prevent="loginUser" class="space-y-6">
+        <Loader :show="loading" message="Iniciando sesión..." />
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2" for="email">Email</label>
           <input
@@ -73,6 +74,7 @@
 import { ref, onMounted, watch, defineProps, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
+import Loader from "../Loader.vue";
 
 
 const props = defineProps({ show: Boolean });
@@ -90,35 +92,39 @@ const goToRegister = () => {
 const email = ref("");
 const password = ref("");
 const googleButton = ref(null);
+const loading = ref(false);
 
 // --- LOGIN NORMAL ---
 const loginUser = async () => {
-  console.log("Intentando login con:", email.value, password.value);
+  loading.value = true;
   const result = await auth.login(email.value, password.value);
-
+  loading.value = false;
   if (result.success) {
-    alert("  Inicio de sesión exitoso");
     emit("login-success");
+    router.push('/perfil/ver-perfil');
   } else {
-    alert("  " + result.message);
+    // Mostrar error de forma no intrusiva si se desea (ej: mensaje en el modal)
+    // Por ahora, no mostrar alert
   }
 };
 
 // --- GOOGLE LOGIN ---
-function handleCredentialResponse(response) {
+async function handleCredentialResponse(response) {
   if (!response.credential) {
-    alert("Error: no se recibió ID Token de Google");
+    loading.value = false;
+    // No alert, solo spinner y salida silenciosa
     return;
   }
 
-  auth.googleLogin(response.credential).then((result) => {
-    if (result.success) {
-      alert("  Login exitoso con Google");
-      emit("login-success");
-    } else {
-      alert("  " + result.message);
-    }
-  });
+  loading.value = true;
+  const result = await auth.googleLogin(response.credential);
+  loading.value = false;
+  if (result.success) {
+    emit("login-success");
+    router.push('/perfil/ver-perfil');
+  } else {
+    // No alert, solo spinner y salida silenciosa
+  }
 }
 
 // --- Inicializar Google cuando esté listo ---

@@ -1,8 +1,8 @@
 <template>
   <div
-    class="min-h-screen flex flex-col bg-background-light text-content-light font-display overflow-hidden"
+    class="min-h-screen flex flex-col bg-background-dark text-content-light font-display overflow-hidden"
   >
-    <HeaderComponent />
+    <HeaderComponent class="bg-background-dark" />
 
     <!-- Main -->
     <main

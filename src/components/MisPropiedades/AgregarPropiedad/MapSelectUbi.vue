@@ -18,6 +18,8 @@ export default {
     },
     emits: ["ubicacion-seleccionada"],
     setup(props, { emit }) {
+            // Obtener la URL base del backend desde la variable de entorno
+            const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
         const map = ref(null);
         let markerLayer = null;
         let houseMarker = null;
@@ -73,18 +75,13 @@ export default {
                         .openPopup();
                 }
 
-                // Reverse geocode to get address (Nominatim)
+                // Reverse geocode usando la URL completa del backend
                 const getAddress = async () => {
                     try {
-                        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
-                        const resp = await fetch(url, {
-                            headers: {
-                                'Accept': 'application/json',
-                            }
-                        });
+                        const url = `${API_BASE_URL}/api/reverse-geocode?lat=${lat}&lon=${lng}`;
+                        const resp = await fetch(url);
                         const json = await resp.json();
-                        const address = json.display_name || '';
-                        // Emitir la ubicación + dirección al componente padre
+                        const address = json.address || '';
                         emit("ubicacion-seleccionada", { latitud: lat, longitud: lng, address });
                     } catch (err) {
                         console.error('Error reverse geocoding:', err);
@@ -116,10 +113,10 @@ export default {
                             // Reverse geocode the campus coordinates and emit address
                             (async () => {
                                 try {
-                                    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
-                                    const resp = await fetch(url, { headers: { Accept: 'application/json' } });
+                                    const url = `${API_BASE_URL}/api/reverse-geocode?lat=${lat}&lon=${lng}`;
+                                    const resp = await fetch(url);
                                     const json = await resp.json();
-                                    const address = json.display_name || '';
+                                    const address = json.address || '';
                                     emit('ubicacion-seleccionada', { latitud: lat, longitud: lng, address });
                                 } catch (err) {
                                     console.error('Error reverse geocoding campus:', err);
