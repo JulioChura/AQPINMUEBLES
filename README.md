@@ -1,62 +1,326 @@
-# 🏡 Datos Iniciales para la Base de Datos
+# ⬛ AQP Inmuebles - Frontend
 
-## 📸 Screenshots de la Aplicación
+> A production-ready, responsive rental property discovery platform built with Vue 3, tailored for university housing in Arequipa.
 
-<div align="center">
-
-<!-- Galería principal: 3 imágenes grandes -->
-<a href="docs/picture1.png" target="_blank"><img src="docs/picture1.png" alt="Pantalla 1" width="30%" style="margin: 0 5px;"/></a>
-<a href="docs/picture2.png" target="_blank"><img src="docs/picture2.png" alt="Pantalla 2" width="30%" style="margin: 0 5px;"/></a>
-<a href="docs/picture3.png" target="_blank"><img src="docs/picture3.png" alt="Pantalla 3" width="30%" style="margin: 0 5px;"/></a>
-
-<!-- Galería secundaria: miniaturas clickeables -->
-<details>
-	<summary>Ver más screenshots</summary>
-	<div>
-		<a href="docs/picture4.png" target="_blank"><img src="docs/picture4.png" alt="Pantalla 4" width="18%" style="margin: 0 5px;"/></a>
-		<a href="docs/picture5.png" target="_blank"><img src="docs/picture5.png" alt="Pantalla 5" width="18%" style="margin: 0 5px;"/></a>
-		<a href="docs/picture6.png" target="_blank"><img src="docs/picture6.png" alt="Pantalla 6" width="18%" style="margin: 0 5px;"/></a>
-		<a href="docs/picture7.png" target="_blank"><img src="docs/picture7.png" alt="Pantalla 7" width="18%" style="margin: 0 5px;"/></a>
-		<a href="docs/picture8.png" target="_blank"><img src="docs/picture8.png" alt="Pantalla 8" width="18%" style="margin: 0 5px;"/></a>
-		<a href="docs/picture9.png" target="_blank"><img src="docs/picture9.png" alt="Pantalla 9" width="18%" style="margin: 0 5px;"/></a>
-		<a href="docs/picture10.png" target="_blank"><img src="docs/picture10.png" alt="Pantalla 10" width="18%" style="margin: 0 5px;"/></a>
-	</div>
-</details>
-
-</div>
+![Vue](https://img.shields.io/badge/Vue-3.5-brightgreen?style=flat-square&logo=vue.js)
+![Vite](https://img.shields.io/badge/Vite-7.1-purple?style=flat-square&logo=vite)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1-38B2AC?style=flat-square&logo=tailwind-css)
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
 
 ---
 
-## 🛏️ Tabla: `accommodation_types`
+## ▣ Table of Contents
 
-| Nombre | Descripción |
-|---------|--------------|
-| **Room** | Un espacio individual dentro de una vivienda o edificio, generalmente con acceso compartido a cocina o baño. Ideal para viajeros solitarios o estancias cortas con un presupuesto más económico. |
-| **Condominio** | Una unidad dentro de un edificio o complejo residencial compartido que ofrece servicios comunes, como piscina, gimnasio o seguridad. Combina la independencia de un departamento con las ventajas de instalaciones compartidas. |
-| **House** | Una vivienda completa e independiente que ofrece mayor espacio, privacidad y comodidades como jardín, garaje o terraza. Perfecta para familias o grupos grandes que desean sentirse como en casa. |
-| **Apartment** | Un espacio privado dentro de un edificio o complejo residencial que cuenta con áreas independientes como sala, cocina, baño y uno o más dormitorios. Ideal para estancias largas o grupos pequeños que buscan comodidad y privacidad. |
-
----
-
-## 🧩 Tabla: `predefined_services`
-
-| Name |Icon class
-|-----------|-----------|
-| Swimming Pool |pool|
-| Parking Available |local_parking|
-| Pet-Friendly |pets|
-| Balcony/Patio |park|
-| Air Conditioning |ac_unit|
-| In-unit Laundry |local_laundry_service|
-| Wi-Fi Included |wifi|
-| Full Kitchen |kitchen|
+- [Overview](#overview)
+- [Technical Highlights](#technical-highlights)
+- [Tech Stack](#tech-stack)
+- [Installation & Setup](#installation--setup)
+- [Project Architecture](#project-architecture)
+- [Features](#features)
+- [Environment Configuration](#environment-configuration)
+- [Available Scripts](#available-scripts)
+- [Credits](#credits)
 
 ---
 
-## 🎓 Tabla: `university_campuses`
+## ◈ Overview
 
-| Nombre | Universidad | Dirección | Latitud | Longitud |
-|---------|--------------|------------|----------|-----------|
-| Área Sociales - UNSA | UNSA | Calle San Agustin 107, Arequipa 04002 | -16.405969 | -71.520543 |
-| Área Biomédicas - UNSA | UNSA | Av. Virgen del Pilar s/n, Área de Biomédicas de la UNSA | -16.41248 | -71.534752 |
-| Área de Ingenierías - UNSA | UNSA | HFWF+29F, Arequipa 04001 | -16.404684 | -71.524577 |
+**AQP Inmuebles** is a sophisticated, full-featured property rental discovery platform engineered for university students seeking accommodation in Arequipa, Peru. The application provides an intuitive interface for students to browse, filter, and interact with rental properties near major universities, while offering property owners robust tools to manage listings and engage with potential tenants.
+
+The frontend has been architected as a production-grade application, featuring:
+- ★ **Seamless user experience** across desktop, tablet, and mobile devices
+- ◆ **Secure authentication** with token-based JWT management
+- ▶ **Interactive mapping** integration for property location visualization
+- ◐ **Dark mode support** with persistent user preferences
+- ⚡ **Optimized performance** with lazy loading and efficient state management
+
+---
+
+## ◈ Screenshots
+
+### Landing & Discovery
+
+![Home page hero with search interface](docs/screenshots/image1.png)
+
+![Property search with advanced filters](docs/screenshots/image2.png)
+
+![Property list view with map integration](docs/screenshots/image3.png)
+
+### Property Details & Interaction
+
+![Detailed property view with gallery](docs/screenshots/image4.png)
+
+![Property location on interactive map](docs/screenshots/image5.png)
+
+![Comment and review section](docs/screenshots/image6.png)
+
+### User Management
+
+![Student registration flow](docs/screenshots/image7.png)
+
+![Property owner dashboard](docs/screenshots/image8.png)
+
+![User profile and saved properties](docs/screenshots/image9.png)
+
+### Property Management (Owners)
+
+![Multi-step property creation wizard](docs/screenshots/image10.png)
+
+![Property management interface](docs/screenshots/image11.png)
+
+![Analytics and property statistics](docs/screenshots/image12.png)
+
+### Dark Mode & Responsive Design
+
+![Dark mode interface](docs/screenshots/image13.png)
+
+![Mobile responsive layout](docs/screenshots/image14.png)
+
+![Tablet view](docs/screenshots/image15.png)
+
+---
+
+## ⚙ Technical Highlights
+
+### Responsive Architecture
+The entire application interface has been architected to be **fully responsive** across all device sizes. This includes:
+- Fluid grid layouts using a mobile-first approach
+- Adaptive navigation with hamburger menu on smaller screens
+- Responsive property cards and filtering components
+- Touch-optimized interactive elements for mobile users
+
+### Performance Optimization
+- **Code splitting** for faster initial load times
+- **Efficient state management** with Pinia (with persistent storage)
+- **Request deduplication** and cancellation for filter operations
+- **Lazy loading** of components and images
+- **Optimized bundle size** through strategic dependency management
+
+### Code Standardization & Best Practices
+- Unified component structure with Vue 3 Composition API
+- Consistent error handling and API integration patterns
+- Type-safe HTTP requests with Axios interceptors
+- Modular store architecture for scalable state management
+- Comprehensive UI consistency via Vuetify and TailwindCSS integration
+
+---
+
+## ◉ Tech Stack
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| **Framework** | Vue 3.5 | Progressive JavaScript framework |
+| **Build Tool** | Vite 7.1 | Lightning-fast module bundler |
+| **Styling** | TailwindCSS 4.1 | Utility-first CSS framework |
+| **UI Components** | Vuetify 3.10 | Material Design component library |
+| **State Management** | Pinia 3.0 | Type-safe state management |
+| **HTTP Client** | Axios 1.12 | Promise-based HTTP client |
+| **Routing** | Vue Router 4.5 | Official router for Vue.js |
+| **Icons** | Lucide Vue 0.552 | Beautifully consistent icon set |
+| **Utilities** | VueUse, DOMPurify | Enhanced reactivity & security |
+| **Maps** | Leaflet 1.9 | Interactive mapping library |
+
+---
+
+## ⬇ Installation & Setup
+
+### Prerequisites
+- **Node.js** >= 16.x
+- **npm** >= 8.x or **yarn** >= 1.22.x
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/yourusername/AQPINMUEBLES.git
+cd AQPINMUEBLES
+```
+
+### Step 2: Install Dependencies
+```bash
+npm install
+```
+
+### Step 3: Environment Configuration
+Create a `.env.local` file in the project root with the following variables:
+
+```env
+# Backend API Configuration
+VITE_API_BASE_URL=http://127.0.0.1:8000
+VITE_API_AUTH_ENDPOINT=/api/auth
+
+# Google OAuth (Optional)
+VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
+
+# Application Environment
+VITE_APP_ENV=development
+```
+
+> **Note:** The backend API is expected to run locally at `http://127.0.0.1:8000`. Adjust the `VITE_API_BASE_URL` accordingly for different environments.
+
+### Step 4: Run Development Server
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173` with Hot Module Replacement (HMR) enabled.
+
+### Step 5: Build for Production
+```bash
+npm run build
+```
+
+The optimized production build will be generated in the `dist/` directory.
+
+### Step 6: Preview Production Build
+```bash
+npm run preview
+```
+
+---
+
+## ◼ Project Architecture
+
+```
+src/
+├── components/              # Reusable Vue components
+│   ├── authorization/      # Authentication-related components
+│   ├── MisPropiedades/     # Property management sections
+│   ├── Profile/            # User profile components
+│   ├── icons/              # Custom icon components
+│   └── [base components]   # Common UI components
+├── views/                   # Full-page components (routes)
+│   ├── Home.vue            # Landing page
+│   ├── SearchDepa.vue      # Property search & filtering
+│   ├── ViewDepa.vue        # Property details
+│   ├── Register*.vue       # Registration flows
+│   ├── MisPropiedades/     # Property management (owner)
+│   └── Profile/            # User profile management
+├── stores/                  # Pinia state management
+│   ├── auth.js             # Authentication state
+│   ├── useGestionPropiedades.js    # Property management
+│   ├── useGestionComments.js       # Comments system
+│   ├── useCreateProperty.js        # Property creation
+│   └── webPageData.js      # Static page data
+├── router/
+│   └── index.js            # Route definitions
+├── App.vue                  # Root component
+├── main.js                  # Application entry point
+└── assets/                  # Static assets
+```
+
+### Key Store Modules
+
+**`auth.js`** - Manages user authentication state and sessions
+- Login/logout functionality
+- Google OAuth integration
+- Token management (access & refresh tokens)
+- Cross-tab session synchronization
+
+**`useGestionPropiedades.js`** - Central hub for property data management
+- CRUD operations for user properties
+- Public property listing & filtering
+- Favorites system with persistent storage
+- Pagination and advanced filtering with request cancellation
+
+**`useGestionComments.js`** - Manages comment/review system
+- Comment creation and deletion
+- Comment retrieval and caching
+
+**`useCreateProperty.js`** - Handles multi-step property creation
+- Form state management across 5 steps
+- Image upload and validation
+- Location mapping integration
+
+---
+
+## ✦ Features
+
+### ▹ **Property Discovery**
+- Advanced filtering by university, location, property type
+- Price range filtering with responsive sliders
+- Real-time search suggestions with thumbnails
+- Interactive map view for property locations
+
+### ▹ **User Management**
+- Secure JWT-based authentication
+- Student and property owner registration
+- Google OAuth integration
+- Profile customization and verification
+
+### ▹ **Property Management (Owners)**
+- Multi-step property creation wizard
+- Photo gallery management
+- Property analytics dashboard
+- Direct messaging with interested tenants
+
+### ▹ **Dark Mode**
+- System-preference detection
+- Manual toggle with persistent storage
+- Comprehensive dark theme coverage
+
+### ▹ **Community Features**
+- Comment/review system
+- Favorites and saved properties
+- Messaging between users
+- Property notification system
+
+---
+
+## ◈ Available Scripts
+
+```bash
+# Development: Start Vite dev server with HMR
+npm run dev
+
+# Build: Compile Vue components to optimized production bundle
+npm run build
+
+# Preview: Serve production build locally for testing
+npm run preview
+```
+
+---
+
+## ◐ Environment Variables Reference
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VITE_API_BASE_URL` | `http://127.0.0.1:8000` | Backend API base URL |
+| `VITE_API_AUTH_ENDPOINT` | `/api/auth` | Authentication endpoint path |
+| `VITE_GOOGLE_CLIENT_ID` | - | Google OAuth client ID |
+| `VITE_APP_ENV` | `development` | Application environment |
+
+---
+
+## ▲ Recommended IDE Setup
+
+For the best development experience, use:
+
+- **Editor**: [VSCode](https://code.visualstudio.com/)
+- **Vue Extension**: [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (disable Vetur if installed)
+- **Additional Extensions**:
+  - Tailwind CSS IntelliSense
+  - Vite
+  - Thunder Client or Postman for API testing
+
+---
+
+## ◈ Credits
+
+This project is a **fork** from the original repository. 
+
+**Lead Frontend Architect & Refactoring**: The application has undergone comprehensive end-to-end refactoring to transform the initial proof-of-concept into a production-ready solution. Key contributions include:
+
+- ► **End-to-End Refactoring**: Complete restructuring of component architecture for scalability and maintainability
+- ► **Responsive Design Implementation**: Full responsive redesign ensuring seamless experience across all device sizes
+- ► **Logic Polish & Bug Fixes**: Extensive debugging, state management optimization, and API integration refinement
+- ► **Standardization**: Implementation of consistent code structure, naming conventions, and UI/UX patterns
+
+---
+
+## ◊ License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+**Built for the university housing community in Arequipa** ◈
