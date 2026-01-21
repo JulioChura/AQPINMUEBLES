@@ -38,45 +38,30 @@ The frontend has been architected as a production-grade application, featuring:
 
 ## ◈ Screenshots
 
-### Landing & Discovery
+![](docs/picture1.png)
 
-![Home page hero with search interface](docs/screenshots/image1.png)
+![](docs/picture2.png)
 
-![Property search with advanced filters](docs/screenshots/image2.png)
+![](docs/picture3.png)
 
-![Property list view with map integration](docs/screenshots/image3.png)
+<details>
+<summary><strong>Ver más imágenes (7 más)</strong></summary>
 
-### Property Details & Interaction
+![](docs/picture4.png)
 
-![Detailed property view with gallery](docs/screenshots/image4.png)
+![](docs/picture5.png)
 
-![Property location on interactive map](docs/screenshots/image5.png)
+![](docs/picture6.png)
 
-![Comment and review section](docs/screenshots/image6.png)
+![](docs/picture7.png)
 
-### User Management
+![](docs/picture8.png)
 
-![Student registration flow](docs/screenshots/image7.png)
+![](docs/picture9.png)
 
-![Property owner dashboard](docs/screenshots/image8.png)
+![](docs/picture10.png)
 
-![User profile and saved properties](docs/screenshots/image9.png)
-
-### Property Management (Owners)
-
-![Multi-step property creation wizard](docs/screenshots/image10.png)
-
-![Property management interface](docs/screenshots/image11.png)
-
-![Analytics and property statistics](docs/screenshots/image12.png)
-
-### Dark Mode & Responsive Design
-
-![Dark mode interface](docs/screenshots/image13.png)
-
-![Mobile responsive layout](docs/screenshots/image14.png)
-
-![Tablet view](docs/screenshots/image15.png)
+</details>
 
 ---
 
